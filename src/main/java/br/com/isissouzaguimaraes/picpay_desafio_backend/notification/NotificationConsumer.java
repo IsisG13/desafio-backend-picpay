@@ -1,5 +1,7 @@
 package br.com.isissouzaguimaraes.picpay_desafio_backend.notification;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -8,6 +10,7 @@ import br.com.isissouzaguimaraes.picpay_desafio_backend.transaction.Transaction;
 
 @Service
 public class NotificationConsumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotificationConsumer.class);
     private final RestClient restClient;
 
     public NotificationConsumer(RestClient.Builder builder) {
@@ -18,6 +21,7 @@ public class NotificationConsumer {
 
     @KafkaListener(topics = "transaction-notification", groupId = "picpay-desafio-backend")
     public void receiveNotification(Transaction transaction) {
+        LOGGER.info("notifyng transaction {}...", transaction);
 
         var response = restClient.get()
                 .retrieve()
